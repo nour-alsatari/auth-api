@@ -15,6 +15,22 @@ const Users = sequelize.define('users', {
     },
     token: {
         type: DataTypes.VIRTUAL
+    },
+    role: {
+        type: DataTypes.ENUM('admin', 'writer', 'editor', 'user'),
+        defaultValue: 'user',
+    },
+    actions: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            const acl = {
+                user: ['read'],
+                writer: ['read', 'create'],
+                editor: ['read', 'create', 'update'],
+                admin: ['read', 'create', 'update', 'delete'],
+            }
+            return acl[this.role];
+        }
     }
 });
 Users.authenticateBasic = async function (username, password) {
