@@ -39,6 +39,7 @@ Users.authenticateBasic = async function (username, password) {
     if (valid) {
         let newToken = jwt.sign({ username: user.username }, API_SECRET);
         user.token = newToken;
+        // console.log(user);
         return user;
     } else {
         throw new Error('Invalid User');
@@ -49,6 +50,7 @@ Users.authenticateBearer = async function (token) {
     const parsedToken = jwt.verify(token, API_SECRET);
     const user = await this.findOne({ where: { username: parsedToken.username } });
     if (user) {
+        // user.token = token;
         return user;
     } else {
         throw new Error('Invalid Token');
